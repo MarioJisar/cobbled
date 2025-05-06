@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pokédex Estilo GBA</title>
+  <style>
+    body {
+      background-color: #f0f0e0;
+      font-family: 'Verdana', sans-serif;
+      padding: 20px;
+    }
+
+    .pokedex-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+    }
+
+    .pokemon-card {
+      background: linear-gradient(to bottom right, #fffdf5, #e6e2cc);
+      border: 4px solid #b00000;
+      border-radius: 12px;
+      width: 320px;
+      padding: 16px;
+      box-shadow: 4px 4px 0 #600000;
+      position: relative;
+    }
+
+    .pokemon-card::before {
+      content: '';
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 16px;
+      height: 16px;
+      background: red;
+      border-radius: 50%;
+      box-shadow: 0 0 0 2px #fff inset;
+    }
+
+    .pokemon-name {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #b00000;
+      margin-bottom: 8px;
+    }
+
+    .entry-info {
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+    }
+
+    .label {
+      font-weight: bold;
+      color: #333;
+    }
+
+    .biomes {
+      color: #006600;
+    }
+
+    .section {
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Pokédex Estilo GBA</h1>
+<div class="pokedex-container" id="pokedex"></div>
+
+<script>
+    const container = document.getElementById("pokedex");
+  
+    fetch('pokemons.json')
+      .then(response => response.json())
+      .then(pokemons => {
+        pokemons.forEach(p => {
+          const card = document.createElement("div");
+          card.className = "pokemon-card";
+          card.innerHTML = `
+            <div class="pokemon-name">${p.name}</div>
+            <div class="entry-info"><span class="label">Entrada:</span> ${p.entry}</div>
+            <div class="entry-info"><span class="label">Rareza:</span> ${p.bucket}</div>
+            <div class="entry-info"><span class="label">Peso:</span> ${p.weight} kg</div>
+            <div class="entry-info"><span class="label">Nivel:</span> ${p.levelMin} - ${p.levelMax}</div>
+            <div class="entry-info section"><span class="label">Biomas:</span> <span class="biomes">${p.biomes.join(', ')}</span></div>
+            <div class="entry-info"><span class="label">Tiempo:</span> ${p.time}</div>
+            <div class="entry-info"><span class="label">Clima:</span> ${p.weather}</div>
+            <div class="entry-info"><span class="label">Presets:</span> ${p.presets}</div>
+            <div class="entry-info"><span class="label">Contexto:</span> ${p.context}</div>
+            <div class="entry-info"><span class="label">Cielo visible:</span> ${p.canSeeSky ? "Sí" : "No"}</div>
+          `;
+          container.appendChild(card);
+        });
+      })
+      .catch(error => {
+        container.innerHTML = "<p>Error cargando los Pokémon. ¿Está el archivo JSON disponible?</p>";
+        console.error(error);
+      });
+  </script>
+  
+
+</body>
+</html>
