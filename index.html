@@ -72,36 +72,41 @@
 <div class="pokedex-container" id="pokedex"></div>
 
 <script>
-    const container = document.getElementById("pokedex");
-  
-    fetch('pokemons.json')
-      .then(response => response.json())
-      .then(pokemons => {
-        pokemons.forEach(p => {
-          const card = document.createElement("div");
-          card.className = "pokemon-card";
-          card.innerHTML = `
-            <div class="pokemon-name">${p.name}</div>
-            <div class="entry-info"><span class="label">Entrada:</span> ${p.entry}</div>
-            <div class="entry-info"><span class="label">Rareza:</span> ${p.bucket}</div>
-            <div class="entry-info"><span class="label">Peso:</span> ${p.weight} kg</div>
-            <div class="entry-info"><span class="label">Nivel:</span> ${p.levelMin} - ${p.levelMax}</div>
-            <div class="entry-info section"><span class="label">Biomas:</span> <span class="biomes">${p.biomes.join(', ')}</span></div>
-            <div class="entry-info"><span class="label">Tiempo:</span> ${p.time}</div>
-            <div class="entry-info"><span class="label">Clima:</span> ${p.weather}</div>
-            <div class="entry-info"><span class="label">Presets:</span> ${p.presets}</div>
-            <div class="entry-info"><span class="label">Contexto:</span> ${p.context}</div>
-            <div class="entry-info"><span class="label">Cielo visible:</span> ${p.canSeeSky ? "Sí" : "No"}</div>
-          `;
-          container.appendChild(card);
-        });
-      })
-      .catch(error => {
-        container.innerHTML = "<p>Error cargando los Pokémon. ¿Está el archivo JSON disponible?</p>";
-        console.error(error);
+  const container = document.getElementById("pokedex");
+
+  fetch('pokemons.json')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("No se pudo cargar el archivo JSON.");
+      }
+      return response.json();
+    })
+    .then(pokemons => {
+      pokemons.forEach(p => {
+        const card = document.createElement("div");
+        card.className = "pokemon-card";
+        card.innerHTML = `
+          <div class="pokemon-name">${p.name}</div>
+          <div class="entry-info"><span class="label">Entrada:</span> ${p.entry}</div>
+          <div class="entry-info"><span class="label">Rareza:</span> ${p.bucket}</div>
+          <div class="entry-info"><span class="label">Peso:</span> ${p.weight} kg</div>
+          <div class="entry-info"><span class="label">Nivel:</span> ${p.levelMin} - ${p.levelMax}</div>
+          <div class="entry-info section"><span class="label">Biomas:</span> <span class="biomes">${p.biomes.join(', ')}</span></div>
+          <div class="entry-info"><span class="label">Tiempo:</span> ${p.time}</div>
+          <div class="entry-info"><span class="label">Clima:</span> ${p.weather}</div>
+          <div class="entry-info"><span class="label">Presets:</span> ${p.presets}</div>
+          <div class="entry-info"><span class="label">Contexto:</span> ${p.context}</div>
+          <div class="entry-info"><span class="label">Cielo visible:</span> ${p.canSeeSky ? "Sí" : "No"}</div>
+        `;
+        container.appendChild(card);
       });
-  </script>
-  
+    })
+    .catch(error => {
+      console.error("Error cargando los datos del JSON:", error);
+      container.innerHTML = "<p>Error al cargar los datos del Pokédex.</p>";
+    });
+</script>
+
 
 </body>
 </html>
